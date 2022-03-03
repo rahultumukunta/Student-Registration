@@ -39,8 +39,12 @@ func DeleteStudent(id int) (beans.Student, error) {
 
 	var StudentInfo beans.Student
 
-	result := database.DB.Where("id = ?", id).Delete(&StudentInfo)
-
-	return StudentInfo, result.Error
+	result := database.DB.Where("id = ?", id).First(&StudentInfo)
+	if result.Error != nil {
+		return StudentInfo, result.Error
+	} else {
+		result := database.DB.Delete(&StudentInfo, id)
+		return StudentInfo, result.Error
+	}
 
 }
